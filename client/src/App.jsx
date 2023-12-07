@@ -23,25 +23,24 @@ const App = () => {
 
 const [characters, setCharacters] = useState([]); //se crea un stado local.
 
-function onSearch(id) {
-         const characterId = characters.filter(
-            char => char.id === Number(id)
-         )
-         if(characterId.length){
-            return alert(`${characterId[0].name} ya existe!`)
+async function onSearch(id) {
+   try {
+      const characterId = characters.filter(
+         char => char.id === Number(id)
+      )
+      if(characterId.length){
+         return alert(`${characterId[0].name} ya existe!`)
+      }
+         const { data }= await axios(`http://localhost:3001/rickandmorty/character/${id}`)
+         if (data.name) {
+            setCharacters([...characters, data]);
+            navigate('/home');
+         } else {
+            alert('¡No hay personajes con este ID!');
          }
-         //axios(`${URL}/${id}?key=${API_KEY}`).then(
-         axios(`http://localhost:3001/rickandmorty/character/${id}`)
-         .then(
-            ({ data }) => {
-               if (data.name) {
-                  setCharacters([...characters, data]);
-               } else {
-                  window.alert('¡No hay personajes con este ID!');
-               }
-            }
-         );
-         navigate('/home');
+   }catch(error){
+      alert(error.message);
+   }
       }
       const dispatch = useDispatch()
       const onClose = (id)=>{
@@ -54,12 +53,28 @@ function onSearch(id) {
    const PASSWORD = '123456';
 
 
-      function login(userData) {
-         if (userData.password === PASSWORD && userData.email === EMAIL) {
-            setAccess(true);
-            navigate('/home');
-         } else {
-            alert("Credenciales incorrectas!");
+      // function login(userData) {
+      //    if (userData.password === PASSWORD && userData.email === EMAIL) {
+      //       setAccess(true);
+      //       navigate('/home');
+      //    } else {
+      //       alert("Credenciales incorrectas!");
+      //    }
+      // }
+      async function login(userData) {
+         try{
+            const { email, password } = userData;
+            const URL = 'http://localhost:3001/rickandmorty/login/';
+            const { data }= await axios(URL + `?email=${email}&password=${password}`)
+            if(data.access){
+               setAccess(data.access);
+              access && navigate('/home');
+              navigate('/home');
+              }else{
+                 alert("Credenciales incorrectas!");
+              }
+         }catch(error){
+            alert(error.message)
          }
       }
       

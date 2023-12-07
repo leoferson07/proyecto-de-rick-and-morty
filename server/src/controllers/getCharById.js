@@ -1,32 +1,26 @@
-// hacer npm install axios
+
 const axios = require("axios");
 const URL = "https://rickandmortyapi.com/api/character";
-const API_KEY = 'leoferson07';
+ //const API_KEY = 'leoferson07';
 
-const getCharById = (res, id) => {
-    axios.get (`${URL}/${id}?key=${API_KEY}`)
-    //retorna una promesa => pending
-    .then(response => response.data)
-    .then(data => {
-        const character = {
-            id: data.id,
-            name: data.name,
-            gender: data.gender,
-            species: data.species,
-            origin: data.origin,
-            image: data.image,
-            status: data.status,
-            location: data.location
-        };
-       return res
-        .writeHead(200, {"content-type": "application/json"})
-        .end(JSON.stringify(character));
-    })
-    .catch(error =>{
-       return res
-       .writeHead(500, {"content-type": "application/json"})
-        .end(JSON.stringify({message: error, message}))
-    })
-}
+ const getCharById = async (req, res)=>{
+    try{
+     const characterId = req.params.id;
+     const {data} = await axios.get(`${URL}/${characterId}`); // nos devuelve una promesa 
+    const {
+        id, status, name, species, origin, image, gender, location
+    } = data;
+    const character = {
+        id, status, name, species, origin, image, gender, location
+    }
+    return character.name 
+    ? res.json(character)
+    : res.status(484).send("Not found") 
 
+ } catch (error){
+     return res.status(500).send(error.message);
+ }
+ };
+
+   
 module.exports = getCharById;
