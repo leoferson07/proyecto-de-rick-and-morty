@@ -29,6 +29,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-image: url("https://es.web.img3.acsta.net/pictures/23/09/12/17/33/1036366.jpg");
+  background-size: contain;
 }
 
 h1 {

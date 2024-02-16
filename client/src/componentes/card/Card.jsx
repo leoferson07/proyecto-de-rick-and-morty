@@ -1,3 +1,4 @@
+import style from "./Card.module.css";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from "react-router-dom";
@@ -28,14 +29,7 @@ const handleFavorite = ()=>{
 
 
    return (
-      <div 
-         style={{
-            backgroundColor:'gray',
-            margin:'20px',
-            padding:'20px',
-            borderRadius:'15px',
-         }}
-         >
+      <div className={style.container} >
             {
    isFav ? (
       <button onClick={handleFavorite}>❤️</button>
